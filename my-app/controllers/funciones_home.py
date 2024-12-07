@@ -18,9 +18,9 @@ import openpyxl  # Para generar el excel
 from flask import send_file
 
 
-def procesar_form_empleado(dataForm, foto_perfil):
+def procesar_form_empleado(data_form, foto_perfil):
     # Formateando Salario
-    salario_sin_puntos = re.sub('[^0-9]+', '', dataForm['salario_empleado'])
+    salario_sin_puntos = re.sub('[^0-9]+', '', data_form['salario_empleado'])
     # convertir salario a INT
     salario_entero = int(salario_sin_puntos)
 
@@ -32,8 +32,8 @@ def procesar_form_empleado(dataForm, foto_perfil):
                 sql = "INSERT INTO tbl_empleados (nombre_empleado, apellido_empleado, sexo_empleado, telefono_empleado, email_empleado, profesion_empleado, foto_empleado, salario_empleado) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
 
                 # Creando una tupla con los valores del INSERT
-                valores = (dataForm['nombre_empleado'], dataForm['apellido_empleado'], dataForm['sexo_empleado'],
-                           dataForm['telefono_empleado'], dataForm['email_empleado'], dataForm['profesion_empleado'], result_foto_perfil, salario_entero)
+                valores = (data_form['nombre_empleado'], data_form['apellido_empleado'], data_form['sexo_empleado'],
+                           data_form['telefono_empleado'], data_form['email_empleado'], data_form['profesion_empleado'], result_foto_perfil, salario_entero)
                 cursor.execute(sql, valores)
 
                 conexion_MySQLdb.commit()

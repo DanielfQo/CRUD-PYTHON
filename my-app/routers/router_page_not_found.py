@@ -5,7 +5,10 @@ from flask import request, session, redirect, url_for
 
 @app.errorhandler(404)
 def page_not_found(error):
-    if 'conectado' in session and request.method == 'GET':
-        return redirect(url_for('inicio'))
+
+    if 'conectado' in session:
+        print("Usuario conectado, redirigiendo al inicio.")
     else:
-        return redirect(url_for('inicio'))
+        print("Usuario no conectado, redirigiendo al inicio.")
+
+    return redirect(url_for('inicio'))

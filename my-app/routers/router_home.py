@@ -45,13 +45,13 @@ def lista_empleados():
 
 @app.route("/detalles-empleado/", methods=['GET'])
 @app.route("/detalles-empleado/<int:idEmpleado>", methods=['GET'])
-def detalleEmpleado(id_empleado=None):
+def detalleEmpleado(idEmpleado=None):
     if 'conectado' in session:
         # Verificamos si el parámetro idEmpleado es None o no está presente en la URL
-        if id_empleado is None:
+        if idEmpleado is None:
             return redirect(url_for('inicio'))
         else:
-            detalle_empleado = sql_detalles_empleadosBD(id_empleado) or []
+            detalle_empleado = sql_detalles_empleadosBD(idEmpleado) or []
             return render_template(f'{PATH_URL}/detalles_empleado.html', detalle_empleado=detalle_empleado)
     else:
         flash('Primero debes iniciar sesión.', 'error')
@@ -61,9 +61,9 @@ def detalleEmpleado(id_empleado=None):
 # Buscadon de empleados
 @app.route("/buscando-empleado", methods=['POST'])
 def viewBuscarEmpleadoBD():
-    resultado_busqueda = buscarEmpleadoBD(request.json['busqueda'])
-    if resultado_busqueda:
-        return render_template(f'{PATH_URL}/resultado_busqueda_empleado.html', dataBusqueda=resultado_busqueda)
+    resultadoBusqueda = buscarEmpleadoBD(request.json['busqueda'])
+    if resultadoBusqueda:
+        return render_template(f'{PATH_URL}/resultado_busqueda_empleado.html', dataBusqueda=resultadoBusqueda)
     else:
         return jsonify({'fin': 0})
 
@@ -71,9 +71,9 @@ def viewBuscarEmpleadoBD():
 @app.route("/editar-empleado/<int:id>", methods=['GET'])
 def viewEditarEmpleado(id):
     if 'conectado' in session:
-        respuesta_empleado = buscarEmpleadoUnico(id)
-        if respuesta_empleado:
-            return render_template(f'{PATH_URL}/form_empleado_update.html', respuestaEmpleado=respuesta_empleado)
+        respuestaEmpleado = buscarEmpleadoUnico(id)
+        if respuestaEmpleado:
+            return render_template(f'{PATH_URL}/form_empleado_update.html', respuestaEmpleado=respuestaEmpleado)
         else:
             flash('El empleado no existe.', 'error')
             return redirect(url_for('inicio'))
@@ -85,16 +85,16 @@ def viewEditarEmpleado(id):
 # Recibir formulario para actulizar informacion de empleado
 @app.route('/actualizar-empleado', methods=['POST'])
 def actualizarEmpleado():
-    result_data = procesar_actualizacion_form(request)
-    if result_data:
+    resultData = procesar_actualizacion_form(request)
+    if resultData:
         return redirect(url_for('lista_empleados'))
 
 
 @app.route("/lista-de-usuarios", methods=['GET'])
 def usuarios():
     if 'conectado' in session:
-        resp_usuarios_bd = lista_usuariosBD()
-        return render_template('public/usuarios/lista_usuarios.html', resp_usuariosBD=resp_usuarios_bd)
+        resp_usuariosBD = lista_usuariosBD()
+        return render_template('public/usuarios/lista_usuarios.html', resp_usuariosBD=resp_usuariosBD)
     else:
         return redirect(url_for('inicioCpanel'))
 

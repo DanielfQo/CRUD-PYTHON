@@ -55,9 +55,9 @@ def cpanelResgisterUserBD():
         email_user = request.form['email_user']
         pass_user = request.form['pass_user']
 
-        result_data = recibeInsertRegisterUser(
+        resultData = recibeInsertRegisterUser(
             name_surname, email_user, pass_user)
-        if (result_data != 0):
+        if (resultData != 0):
             flash('la cuenta fue creada correctamente.', 'success')
             return redirect(url_for('inicio'))
         else:
@@ -106,8 +106,8 @@ def loginCliente():
             pass_user = str(request.form['pass_user'])
 
             # Comprobando si existe una cuenta
-            conexion_mysqldb = connectionBD()
-            cursor = conexion_mysqldb.cursor(dictionary=True)
+            conexion_MySQLdb = connectionBD()
+            cursor = conexion_MySQLdb.cursor(dictionary=True)
             cursor.execute(
                 "SELECT * FROM users WHERE email_user = %s", [email_user])
             account = cursor.fetchone()

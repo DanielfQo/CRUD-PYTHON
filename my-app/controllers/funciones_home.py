@@ -18,9 +18,9 @@ import openpyxl  # Para generar el excel
 from flask import send_file
 
 
-def procesar_form_empleado(dataForm, foto_perfil):
+def procesar_form_empleado(data_form, foto_perfil):
     # Formateando Salario
-    salario_sin_puntos = re.sub('[^0-9]+', '', dataForm['salario_empleado'])
+    salario_sin_puntos = re.sub('[^0-9]+', '', data_form['salario_empleado'])
     # convertir salario a INT
     salario_entero = int(salario_sin_puntos)
 
@@ -32,8 +32,8 @@ def procesar_form_empleado(dataForm, foto_perfil):
                 sql = "INSERT INTO tbl_empleados (nombre_empleado, apellido_empleado, sexo_empleado, telefono_empleado, email_empleado, profesion_empleado, foto_empleado, salario_empleado) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
 
                 # Creando una tupla con los valores del INSERT
-                valores = (dataForm['nombre_empleado'], dataForm['apellido_empleado'], dataForm['sexo_empleado'],
-                           dataForm['telefono_empleado'], dataForm['email_empleado'], dataForm['profesion_empleado'], result_foto_perfil, salario_entero)
+                valores = (data_form['nombre_empleado'], data_form['apellido_empleado'], data_form['sexo_empleado'],
+                           data_form['telefono_empleado'], data_form['email_empleado'], data_form['profesion_empleado'], result_foto_perfil, salario_entero)
                 cursor.execute(sql, valores)
 
                 conexion_MySQLdb.commit()
@@ -51,8 +51,8 @@ def procesar_imagen_perfil(foto):
         extension = os.path.splitext(filename)[1]
 
         # Creando un string de 50 caracteres
-        nuevoNameFile = (uuid.uuid4().hex + uuid.uuid4().hex)[:100]
-        nombreFile = nuevoNameFile + extension
+        nuevo_name_file = (uuid.uuid4().hex + uuid.uuid4().hex)[:100]
+        nombre_file = nuevo_name_file + extension
 
         # Construir la ruta completa de subida del archivo
         basepath = os.path.abspath(os.path.dirname(__file__))
@@ -65,10 +65,10 @@ def procesar_imagen_perfil(foto):
             os.chmod(upload_dir, 0o755)
 
         # Construir la ruta completa de subida del archivo
-        upload_path = os.path.join(upload_dir, nombreFile)
+        upload_path = os.path.join(upload_dir, nombre_file)
         foto.save(upload_path)
 
-        return nombreFile
+        return nombre_file
 
     except Exception as e:
         print("Error al procesar archivo:", e)
@@ -80,7 +80,7 @@ def sql_lista_empleadosBD():
     try:
         with connectionBD() as conexion_MySQLdb:
             with conexion_MySQLdb.cursor(dictionary=True) as cursor:
-                querySQL = (f"""
+                query_sql = (f"""
                     SELECT 
                         e.id_empleado,
                         e.nombre_empleado, 
@@ -94,9 +94,9 @@ def sql_lista_empleadosBD():
                     FROM tbl_empleados AS e
                     ORDER BY e.id_empleado DESC
                     """)
-                cursor.execute(querySQL,)
-                empleadosBD = cursor.fetchall()
-        return empleadosBD
+                cursor.execute(query_sql,)
+                empleado_bd = cursor.fetchall()
+        return empleado_bd
     except Exception as e:
         print(
             f"Errro en la función sql_lista_empleadosBD: {e}")
@@ -108,7 +108,7 @@ def sql_detalles_empleadosBD(idEmpleado):
     try:
         with connectionBD() as conexion_MySQLdb:
             with conexion_MySQLdb.cursor(dictionary=True) as cursor:
-                querySQL = ("""
+                query_sql = ("""
                     SELECT 
                         e.id_empleado,
                         e.nombre_empleado, 
@@ -127,9 +127,9 @@ def sql_detalles_empleadosBD(idEmpleado):
                     WHERE id_empleado =%s
                     ORDER BY e.id_empleado DESC
                     """)
-                cursor.execute(querySQL, (idEmpleado,))
-                empleadosBD = cursor.fetchone()
-        return empleadosBD
+                cursor.execute(query_sql, (idEmpleado,))
+                empleados_bd = cursor.fetchone()
+        return empleados_bd
     except Exception as e:
         print(
             f"Errro en la función sql_detalles_empleadosBD: {e}")
@@ -141,7 +141,7 @@ def empleadosReporte():
     try:
         with connectionBD() as conexion_MySQLdb:
             with conexion_MySQLdb.cursor(dictionary=True) as cursor:
-                querySQL = ("""
+                query_sql = ("""
                     SELECT 
                         e.id_empleado,
                         e.nombre_empleado, 
@@ -158,9 +158,9 @@ def empleadosReporte():
                     FROM tbl_empleados AS e
                     ORDER BY e.id_empleado DESC
                     """)
-                cursor.execute(querySQL,)
-                empleadosBD = cursor.fetchall()
-        return empleadosBD
+                cursor.execute(query_sql,)
+                empleados_bd  = cursor.fetchall()
+        return empleados_bd 
     except Exception as e:
         print(
             f"Errro en la función empleadosReporte: {e}")
@@ -168,21 +168,21 @@ def empleadosReporte():
 
 
 def generarReporteExcel():
-    dataEmpleados = empleadosReporte()
+    data_empleados = empleadosReporte()
     wb = openpyxl.Workbook()
     hoja = wb.active
 
     # Agregar la fila de encabezado con los títulos
-    cabeceraExcel = ("Nombre", "Apellido", "Sexo",
+    cabecera_excel = ("Nombre", "Apellido", "Sexo",
                      "Telefono", "Email", "Profesión", "Salario", "Fecha de Ingreso")
 
-    hoja.append(cabeceraExcel)
+    hoja.append(cabecera_excel)
 
     # Formato para números en moneda colombiana y sin decimales
     formato_moneda_colombiana = '#,##0'
 
     # Agregar los registros a la hoja
-    for registro in dataEmpleados:
+    for registro in data_empleados:
         nombre_empleado = registro['nombre_empleado']
         apellido_empleado = registro['apellido_empleado']
         sexo_empleado = registro['sexo_empleado']
@@ -203,7 +203,7 @@ def generarReporteExcel():
             celda.number_format = formato_moneda_colombiana
 
     fecha_actual = datetime.datetime.now()
-    archivoExcel = f"Reporte_empleados_{fecha_actual.strftime('%Y_%m_%d')}.xlsx"
+    archivo_excel = f"Reporte_empleados_{fecha_actual.strftime('%Y_%m_%d')}.xlsx"
     carpeta_descarga = "../static/downloads-excel"
     ruta_descarga = os.path.join(os.path.dirname(
         os.path.abspath(__file__)), carpeta_descarga)
@@ -213,7 +213,7 @@ def generarReporteExcel():
         # Dando permisos a la carpeta
         os.chmod(ruta_descarga, 0o755)
 
-    ruta_archivo = os.path.join(ruta_descarga, archivoExcel)
+    ruta_archivo = os.path.join(ruta_descarga, archivo_excel)
     wb.save(ruta_archivo)
 
     # Enviar el archivo como respuesta HTTP
@@ -224,7 +224,7 @@ def buscarEmpleadoBD(search):
     try:
         with connectionBD() as conexion_MySQLdb:
             with conexion_MySQLdb.cursor(dictionary=True) as mycursor:
-                querySQL = ("""
+                query_sql = ("""
                         SELECT 
                             e.id_empleado,
                             e.nombre_empleado, 
@@ -239,7 +239,7 @@ def buscarEmpleadoBD(search):
                         ORDER BY e.id_empleado DESC
                     """)
                 search_pattern = f"%{search}%"  # Agregar "%" alrededor del término de búsqueda
-                mycursor.execute(querySQL, (search_pattern,))
+                mycursor.execute(query_sql, (search_pattern,))
                 resultado_busqueda = mycursor.fetchall()
                 return resultado_busqueda
 
@@ -252,7 +252,7 @@ def buscarEmpleadoUnico(id):
     try:
         with connectionBD() as conexion_MySQLdb:
             with conexion_MySQLdb.cursor(dictionary=True) as mycursor:
-                querySQL = ("""
+                query_sql = ("""
                         SELECT 
                             e.id_empleado,
                             e.nombre_empleado, 
@@ -266,7 +266,7 @@ def buscarEmpleadoUnico(id):
                         FROM tbl_empleados AS e
                         WHERE e.id_empleado =%s LIMIT 1
                     """)
-                mycursor.execute(querySQL, (id,))
+                mycursor.execute(query_sql, (id,))
                 empleado = mycursor.fetchone()
                 return empleado
 
@@ -295,7 +295,7 @@ def procesar_actualizacion_form(data):
                     file = data.files['foto_empleado']
                     fotoForm = procesar_imagen_perfil(file)
 
-                    querySQL = """
+                    query_sql = """
                         UPDATE tbl_empleados
                         SET 
                             nombre_empleado = %s,
@@ -312,7 +312,7 @@ def procesar_actualizacion_form(data):
                               telefono_empleado, email_empleado, profesion_empleado,
                               salario_empleado, fotoForm, id_empleado)
                 else:
-                    querySQL = """
+                    query_sql = """
                         UPDATE tbl_empleados
                         SET 
                             nombre_empleado = %s,
@@ -328,7 +328,7 @@ def procesar_actualizacion_form(data):
                               telefono_empleado, email_empleado, profesion_empleado,
                               salario_empleado, id_empleado)
 
-                cursor.execute(querySQL, values)
+                cursor.execute(query_sql, values)
                 conexion_MySQLdb.commit()
 
         return cursor.rowcount or []
@@ -342,10 +342,10 @@ def lista_usuariosBD():
     try:
         with connectionBD() as conexion_MySQLdb:
             with conexion_MySQLdb.cursor(dictionary=True) as cursor:
-                querySQL = "SELECT id, name_surname, email_user, created_user FROM users"
-                cursor.execute(querySQL,)
-                usuariosBD = cursor.fetchall()
-        return usuariosBD
+                query_sql = "SELECT id, name_surname, email_user, created_user FROM users"
+                cursor.execute(query_sql,)
+                usuarios_bd = cursor.fetchall()
+        return usuarios_bd
     except Exception as e:
         print(f"Error en lista_usuariosBD : {e}")
         return []
@@ -356,19 +356,19 @@ def eliminarEmpleado(id_empleado, foto_empleado):
     try:
         with connectionBD() as conexion_MySQLdb:
             with conexion_MySQLdb.cursor(dictionary=True) as cursor:
-                querySQL = "DELETE FROM tbl_empleados WHERE id_empleado=%s"
-                cursor.execute(querySQL, (id_empleado,))
+                query_sql = "DELETE FROM tbl_empleados WHERE id_empleado=%s"
+                cursor.execute(query_sql, (id_empleado,))
                 conexion_MySQLdb.commit()
                 resultado_eliminar = cursor.rowcount
 
                 if resultado_eliminar:
                     # Eliminadon foto_empleado desde el directorio
                     basepath = path.dirname(__file__)
-                    url_File = path.join(
+                    url_file = path.join(
                         basepath, '../static/fotos_empleados', foto_empleado)
 
-                    if path.exists(url_File):
-                        remove(url_File)  # Borrar foto desde la carpeta
+                    if path.exists(url_file):
+                        remove(url_file)  # Borrar foto desde la carpeta
 
         return resultado_eliminar
     except Exception as e:
@@ -380,8 +380,8 @@ def eliminarUsuario(id):
     try:
         with connectionBD() as conexion_MySQLdb:
             with conexion_MySQLdb.cursor(dictionary=True) as cursor:
-                querySQL = "DELETE FROM users WHERE id=%s"
-                cursor.execute(querySQL, (id,))
+                query_sql = "DELETE FROM users WHERE id=%s"
+                cursor.execute(query_sql, (id,))
                 conexion_MySQLdb.commit()
                 resultado_eliminar = cursor.rowcount
 

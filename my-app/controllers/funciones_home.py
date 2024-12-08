@@ -104,7 +104,7 @@ def sql_lista_empleadosBD():
 
 
 # Detalles del Empleado
-def sql_detalles_empleadosBD(idEmpleado):
+def sql_detalles_empleadosBD(id_empleado):
     try:
         with connectionBD() as conexion_MySQLdb:
             with conexion_MySQLdb.cursor(dictionary=True) as cursor:
@@ -127,7 +127,7 @@ def sql_detalles_empleadosBD(idEmpleado):
                     WHERE id_empleado =%s
                     ORDER BY e.id_empleado DESC
                     """)
-                cursor.execute(query_sql, (idEmpleado,))
+                cursor.execute(query_sql, (id_empleado,))
                 empleados_bd = cursor.fetchone()
         return empleados_bd
     except Exception as e:

@@ -93,7 +93,6 @@ def actualizarPerfil():
         flash('primero debes iniciar sesión.', 'error')
         return redirect(url_for('inicio'))
 
-
 # Validar sesión
 @app.route('/login', methods=['GET', 'POST'])
 def loginCliente():

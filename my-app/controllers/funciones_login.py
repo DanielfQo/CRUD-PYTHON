@@ -141,7 +141,6 @@ def updatePefilSinPass(id_user, name_surname):
         print(f"Ocurrió un error en la funcion updatePefilSinPass: {e}")
         return []
 
-
 def dataLoginSesion():
     inforLogin = {
         "id": session['id'],

@@ -98,7 +98,6 @@ def usuarios():
     else:
         return redirect(url_for('inicioCpanel'))
 
-
 @app.route('/borrar-usuario/<string:id>', methods=['GET'])
 def borrarUsuario(id):
     resp = eliminarUsuario(id)

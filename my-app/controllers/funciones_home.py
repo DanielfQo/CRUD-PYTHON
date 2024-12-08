@@ -375,7 +375,6 @@ def eliminarEmpleado(id_empleado, foto_empleado):
         print(f"Error en eliminarEmpleado : {e}")
         return []
 
-
 # Eliminar usuario
 def eliminarUsuario(id):
     try:

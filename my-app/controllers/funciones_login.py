@@ -12,10 +12,10 @@ from werkzeug.security import generate_password_hash
 
 
 def recibeInsertRegisterUser(name_surname, email_user, pass_user):
-    respuestaValidar = validarDataRegisterLogin(
+    respuesta_validar = validarDataRegisterLogin(
         name_surname, email_user, pass_user)
 
-    if (respuestaValidar):
+    if (respuesta_validar):
         nueva_password = generate_password_hash(pass_user, method='scrypt')
         try:
             with connectionBD() as conexion_MySQLdb:
@@ -38,11 +38,11 @@ def validarDataRegisterLogin(name_surname, email_user, pass_user):
     try:
         with connectionBD() as conexion_MySQLdb:
             with conexion_MySQLdb.cursor(dictionary=True) as cursor:
-                querySQL = "SELECT * FROM users WHERE email_user = %s"
-                cursor.execute(querySQL, (email_user,))
-                userBD = cursor.fetchone()  # Obtener la primera fila de resultados
+                query_sql = "SELECT * FROM users WHERE email_user = %s"
+                cursor.execute(query_sql, (email_user,))
+                user_bd = cursor.fetchone()  # Obtener la primera fila de resultados
 
-                if userBD is not None:
+                if user_bd is not None:
                     flash('el registro no fue procesado ya existe la cuenta', 'error')
                     return False
                 elif not re.match(r'[^@]+@[^@]+\.[^@]+', email_user):
@@ -63,8 +63,8 @@ def info_perfil_session():
     try:
         with connectionBD() as conexion_MySQLdb:
             with conexion_MySQLdb.cursor(dictionary=True) as cursor:
-                querySQL = "SELECT name_surname, email_user FROM users WHERE id = %s"
-                cursor.execute(querySQL, (session['id'],))
+                query_sql = "SELECT name_surname, email_user FROM users WHERE id = %s"
+                cursor.execute(query_sql, (session['id'],))
                 info_perfil = cursor.fetchall()
         return info_perfil
     except Exception as e:
@@ -86,8 +86,8 @@ def procesar_update_perfil(data_form):
 
     with connectionBD() as conexion_MySQLdb:
         with conexion_MySQLdb.cursor(dictionary=True) as cursor:
-            querySQL = """SELECT * FROM users WHERE email_user = %s LIMIT 1"""
-            cursor.execute(querySQL, (email_user,))
+            query_sql = """SELECT * FROM users WHERE email_user = %s LIMIT 1"""
+            cursor.execute(query_sql, (email_user,))
             account = cursor.fetchone()
             if account:
                 if check_password_hash(account['pass_user'], pass_actual):
@@ -103,7 +103,7 @@ def procesar_update_perfil(data_form):
                                     new_pass_user, method='scrypt')
                                 with connectionBD() as conexion_MySQLdb:
                                     with conexion_MySQLdb.cursor(dictionary=True) as cursor:
-                                        querySQL = """
+                                        query_sql = """
                                             UPDATE users
                                             SET 
                                                 name_surname = %s,
@@ -112,7 +112,7 @@ def procesar_update_perfil(data_form):
                                         """
                                         params = (name_surname,
                                                   nueva_password, id_user)
-                                        cursor.execute(querySQL, params)
+                                        cursor.execute(query_sql, params)
                                         conexion_MySQLdb.commit()
                                 return cursor.rowcount or []
                             except Exception as e:
@@ -127,25 +127,24 @@ def updatePefilSinPass(id_user, name_surname):
     try:
         with connectionBD() as conexion_MySQLdb:
             with conexion_MySQLdb.cursor(dictionary=True) as cursor:
-                querySQL = """
+                query_sql = """
                     UPDATE users
                     SET 
                         name_surname = %s
                     WHERE id = %s
                 """
                 params = (name_surname, id_user)
-                cursor.execute(querySQL, params)
+                cursor.execute(query_sql, params)
                 conexion_MySQLdb.commit()
         return cursor.rowcount
     except Exception as e:
         print(f"Ocurrió un error en la funcion updatePefilSinPass: {e}")
         return []
 
-
 def dataLoginSesion():
-    inforLogin = {
+    infor_login = {
         "id": session['id'],
         "name_surname": session['name_surname'],
         "email_user": session['email_user']
     }
-    return inforLogin
+    return infor_login

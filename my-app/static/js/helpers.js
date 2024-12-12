@@ -831,17 +831,15 @@ const Helpers = {
 
         targetEl.forEach(tel => {
           tel.classList.toggle('show')
-          if (
-            typeof overlay !== 'undefined' &&
-            overlay !== null &&
-            overlay !== false &&
-            typeof appOverlay !== 'undefined'
-          ) {
+
+          // Simplificar la validación lógica
+          if (overlay && appOverlay.length > 0) {
             if (tel.classList.contains('show')) {
               appOverlay[0].classList.add('show')
             } else {
               appOverlay[0].classList.remove('show')
             }
+
             appOverlay[0].addEventListener('click', e => {
               e.currentTarget.classList.remove('show')
               tel.classList.remove('show')

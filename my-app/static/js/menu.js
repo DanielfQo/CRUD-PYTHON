@@ -303,49 +303,56 @@ class Menu {
   }
 
   _findUnopenedParent(item, closeChildren) {
-    let tree = []
-    let parentItem = null
+    let tree = [];
+    let parentItem = null;
 
-    while (item) {
-      if (item.classList.contains('disabled')) {
-        parentItem = null
-        tree = []
-      } else {
-        if (!item.classList.contains('open')) parentItem = item
-        tree.push(item)
-      }
-
-      item = Menu._findParent(item, 'menu-item', false)
-    }
-
-    if (!parentItem) return null
-    if (tree.length === 1) return parentItem
-
-    tree = tree.slice(0, tree.indexOf(parentItem))
-
-    for (let i = 0, l = tree.length; i < l; i++) {
-      tree[i].classList.add('open')
-
-      if (this._accordion) {
-        const openedItems = Menu._findChild(tree[i].parentNode, ['menu-item', 'open'])
-
-        for (let j = 0, k = openedItems.length; j < k; j++) {
-          if (openedItems[j] !== tree[i]) {
-            openedItems[j].classList.remove('open')
-
-            if (closeChildren) {
-              const openedChildren = openedItems[j].querySelectorAll('.menu-item.open')
-              for (let x = 0, z = openedChildren.length; x < z; x++) {
-                openedChildren[x].classList.remove('open')
-              }
+    const buildTree = (currentItem) => {
+        while (currentItem) {
+            if (currentItem.classList.contains('disabled')) {
+                parentItem = null;
+                tree = [];
+                break;
             }
-          }
-        }
-      }
-    }
 
-    return parentItem
-  }
+            if (!currentItem.classList.contains('open')) parentItem = currentItem;
+            tree.push(currentItem);
+
+            currentItem = Menu._findParent(currentItem, 'menu-item', false);
+        }
+    };
+
+    const closeOpenedChildren = (openedItem) => {
+        const openedChildren = openedItem.querySelectorAll('.menu-item.open');
+        openedChildren.forEach((child) => child.classList.remove('open'));
+    };
+
+    const processOpenedItems = (treeItem) => {
+        const openedItems = Menu._findChild(treeItem.parentNode, ['menu-item', 'open']);
+        openedItems.forEach((openedItem) => {
+            if (openedItem !== treeItem) {
+                openedItem.classList.remove('open');
+                if (closeChildren) closeOpenedChildren(openedItem);
+            }
+        });
+    };
+
+    const openTree = () => {
+        tree.forEach((treeItem) => {
+            treeItem.classList.add('open');
+            if (this._accordion) processOpenedItems(treeItem);
+        });
+    };
+
+    buildTree(item);
+
+    if (!parentItem) return null;
+    if (tree.length === 1) return parentItem;
+
+    tree = tree.slice(0, tree.indexOf(parentItem));
+    openTree();
+
+    return parentItem;
+}
 
   _toggleAnimation(open, item, closeChildren) {
     const toggleLink = Menu._getLink(item, true)

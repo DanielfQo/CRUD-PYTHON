@@ -73,7 +73,6 @@ def info_perfil_session():
 
 
 def procesar_update_perfil(data_form):
-    # Extraer datos del diccionario data_form
     id_user = session['id']
     name_surname = data_form['name_surname']
     email_user = data_form['email_user']
@@ -84,43 +83,44 @@ def procesar_update_perfil(data_form):
     if not pass_actual or not email_user:
         return 3
 
+    account = obtener_usuario_por_email(email_user)
+    if not account or not check_password_hash(account['pass_user'], pass_actual):
+        return 0
+
+    if not new_pass_user or not repetir_pass_user:
+        return updatePefilSinPass(id_user, name_surname)
+
+    if new_pass_user != repetir_pass_user:
+        return 2
+
+    return actualizar_perfil_con_password(id_user, name_surname, new_pass_user)
+
+def obtener_usuario_por_email(email):
     with connectionBD() as conexion_MySQLdb:
         with conexion_MySQLdb.cursor(dictionary=True) as cursor:
-            query_sql = """SELECT * FROM users WHERE email_user = %s LIMIT 1"""
-            cursor.execute(query_sql, (email_user,))
-            account = cursor.fetchone()
-            if account:
-                if check_password_hash(account['pass_user'], pass_actual):
-                    # Verificar si new_pass_user y repetir_pass_user están vacías
-                    if not new_pass_user or not repetir_pass_user:
-                        return updatePefilSinPass(id_user, name_surname)
-                    else:
-                        if new_pass_user != repetir_pass_user:
-                            return 2
-                        else:
-                            try:
-                                nueva_password = generate_password_hash(
-                                    new_pass_user, method='scrypt')
-                                with connectionBD() as conexion_MySQLdb:
-                                    with conexion_MySQLdb.cursor(dictionary=True) as cursor:
-                                        query_sql = """
-                                            UPDATE users
-                                            SET 
-                                                name_surname = %s,
-                                                pass_user = %s
-                                            WHERE id = %s
-                                        """
-                                        params = (name_surname,
-                                                  nueva_password, id_user)
-                                        cursor.execute(query_sql, params)
-                                        conexion_MySQLdb.commit()
-                                return cursor.rowcount or []
-                            except Exception as e:
-                                print(
-                                    f"Ocurrió en procesar_update_perfil: {e}")
-                                return []
-            else:
-                return 0
+            query_sql = "SELECT * FROM users WHERE email_user = %s LIMIT 1"
+            cursor.execute(query_sql, (email,))
+            return cursor.fetchone()
+
+def actualizar_perfil_con_password(id_user, name_surname, new_pass_user):
+    try:
+        nueva_password = generate_password_hash(new_pass_user, method='scrypt')
+        with connectionBD() as conexion_MySQLdb:
+            with conexion_MySQLdb.cursor(dictionary=True) as cursor:
+                query_sql = """
+                    UPDATE users
+                    SET 
+                        name_surname = %s,
+                        pass_user = %s
+                    WHERE id = %s
+                """
+                cursor.execute(query_sql, (name_surname, nueva_password, id_user))
+                conexion_MySQLdb.commit()
+        return cursor.rowcount or []
+    except Exception as e:
+        print(f"Error en actualizar_perfil_con_password: {e}")
+        return []
+
 
 
 def updatePefilSinPass(id_user, name_surname):

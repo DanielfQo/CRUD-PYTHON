@@ -69,5 +69,4 @@ Esto instalará la aplicación en tu entorno Python.
 
 ---
 
-Con estos pasos, tu aplicación estará completamente gestionada, compilada y empaquetada. Si tienes dudas o necesitas más ayuda, no dudes en consultarlo.
 

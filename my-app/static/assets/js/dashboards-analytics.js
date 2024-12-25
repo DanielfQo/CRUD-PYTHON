@@ -269,10 +269,11 @@
         }
       }
     };
-  if (typeof totalRevenueChartEl !== undefined && totalRevenueChartEl !== null) {
+  if (typeof totalRevenueChartEl !== "undefined" && totalRevenueChartEl !== null) {
     const totalRevenueChart = new ApexCharts(totalRevenueChartEl, totalRevenueChartOptions);
     totalRevenueChart.render();
   }
+  
 
   // Growth Chart - Radial Bar Chart
   // --------------------------------------------------------------------
@@ -350,7 +351,7 @@
         }
       }
     };
-  if (typeof growthChartEl !== undefined && growthChartEl !== null) {
+  if (typeof growthChartEl !== "undefined" && growthChartEl !== null) {
     const growthChart = new ApexCharts(growthChartEl, growthChartOptions);
     growthChart.render();
   }
@@ -413,7 +414,7 @@
         show: false
       }
     };
-  if (typeof profileReportChartEl !== undefined && profileReportChartEl !== null) {
+  if (typeof profileReportChartEl !== "undefined" && profileReportChartEl !== null) {
     const profileReportChart = new ApexCharts(profileReportChartEl, profileReportChartConfig);
     profileReportChart.render();
   }
@@ -483,7 +484,7 @@
         }
       }
     };
-  if (typeof chartOrderStatistics !== undefined && chartOrderStatistics !== null) {
+  if (typeof chartOrderStatistics !== "undefined" && chartOrderStatistics !== null) {
     const statisticsChart = new ApexCharts(chartOrderStatistics, orderChartConfig);
     statisticsChart.render();
   }
@@ -582,7 +583,7 @@
         tickAmount: 4
       }
     };
-  if (typeof incomeChartEl !== undefined && incomeChartEl !== null) {
+  if (typeof incomeChartEl !== "undefined" && incomeChartEl !== null) {
     const incomeChart = new ApexCharts(incomeChartEl, incomeChartConfig);
     incomeChart.render();
   }
@@ -655,7 +656,7 @@
         }
       }
     };
-  if (typeof weeklyExpensesEl !== undefined && weeklyExpensesEl !== null) {
+  if (typeof weeklyExpensesEl !== "undefined" && weeklyExpensesEl !== null) {
     const weeklyExpenses = new ApexCharts(weeklyExpensesEl, weeklyExpensesConfig);
     weeklyExpenses.render();
   }

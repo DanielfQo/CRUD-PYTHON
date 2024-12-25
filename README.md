@@ -6,3 +6,5 @@
 - Kevin Andres Rodriguez Lima
 - Leonardo Gustavo Gaona Briceño
 - Michael Jarnie Ticona Larico
+
+Actualizando rama

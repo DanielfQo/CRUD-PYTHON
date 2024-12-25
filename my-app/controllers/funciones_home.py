@@ -20,7 +20,7 @@ from flask import send_file
 
 def procesar_form_empleado(data_form, foto_perfil):
     # Formateando Salario
-    salario_sin_puntos = re.sub('[^0-9]+', '', data_form['salario_empleado'])
+    salario_sin_puntos = re.sub(r'\D+', '', data_form['salario_empleado'])
     # convertir salario a INT
     salario_entero = int(salario_sin_puntos)
 
@@ -286,8 +286,7 @@ def procesar_actualizacion_form(data):
                 email_empleado = data.form['email_empleado']
                 profesion_empleado = data.form['profesion_empleado']
 
-                salario_sin_puntos = re.sub(
-                    '[^0-9]+', '', data.form['salario_empleado'])
+                salario_sin_puntos = re.sub(r'\D+', '', data.form['salario_empleado']) 
                 salario_empleado = int(salario_sin_puntos)
                 id_empleado = data.form['id_empleado']
 

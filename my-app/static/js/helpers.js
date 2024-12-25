@@ -481,44 +481,47 @@ const Helpers = {
 
   // ---
   // Collapse / expand layout
-  setCollapsed(collapsed = requiredParam('collapsed'), animate = true) {
-    const layoutMenu = this.getLayoutMenu()
+    setCollapsed(collapsed, animate = true) {
+      if (typeof collapsed === 'undefined') {
+        requiredParam('collapsed');
+      }
+      const layoutMenu = this.getLayoutMenu()
 
-    if (!layoutMenu) return
+      if (!layoutMenu) return
 
-    this._unbindLayoutAnimationEndEvent()
+      this._unbindLayoutAnimationEndEvent()
 
-    if (animate && this._supportsTransitionEnd()) {
-      this._addClass('layout-transitioning')
-      if (collapsed) this._setMenuHoverState(false)
+      if (animate && this._supportsTransitionEnd()) {
+        this._addClass('layout-transitioning')
+        if (collapsed) this._setMenuHoverState(false)
 
-      this._bindLayoutAnimationEndEvent(
-        () => {
-          // Collapse / Expand
-          if (this.isSmallScreen) this._setCollapsed(collapsed)
-        },
-        () => {
-          this._removeClass('layout-transitioning')
+        this._bindLayoutAnimationEndEvent(
+          () => {
+            // Collapse / Expand
+            if (this.isSmallScreen) this._setCollapsed(collapsed)
+          },
+          () => {
+            this._removeClass('layout-transitioning')
+            this._triggerWindowEvent('resize')
+            this._triggerEvent('toggle')
+            this._setMenuHoverState(false)
+          }
+        )
+      } else {
+        this._addClass('layout-no-transition')
+        if (collapsed) this._setMenuHoverState(false)
+
+        // Collapse / Expand
+        this._setCollapsed(collapsed)
+
+        setTimeout(() => {
+          this._removeClass('layout-no-transition')
           this._triggerWindowEvent('resize')
           this._triggerEvent('toggle')
           this._setMenuHoverState(false)
-        }
-      )
-    } else {
-      this._addClass('layout-no-transition')
-      if (collapsed) this._setMenuHoverState(false)
-
-      // Collapse / Expand
-      this._setCollapsed(collapsed)
-
-      setTimeout(() => {
-        this._removeClass('layout-no-transition')
-        this._triggerWindowEvent('resize')
-        this._triggerEvent('toggle')
-        this._setMenuHoverState(false)
-      }, 1)
-    }
-  },
+        }, 1)
+      }
+    },
 
   // ---
   // Toggle layout
@@ -528,7 +531,16 @@ const Helpers = {
 
   // ---
   // Set layout positioning
-  setPosition(fixed = requiredParam('fixed'), offcanvas = requiredParam('offcanvas')) {
+  setPosition(fixed, offcanvas) {
+
+    if (typeof fixed === 'undefined') {
+      requiredParam('fixed');
+    }
+
+    if (typeof offcanvas === 'undefined') {
+      requiredParam('offcanvas');
+    }
+
     this._removeClass('layout-menu-offcanvas layout-menu-fixed layout-menu-fixed-offcanvas')
 
     if (!fixed && offcanvas) {
@@ -582,7 +594,11 @@ const Helpers = {
     this._bindMenuMouseEvents()
   },
 
-  setAutoUpdate(enable = requiredParam('enable')) {
+  setAutoUpdate(enable) {
+    if (typeof enable === 'undefined') {
+      requiredParam('enable');
+    }
+
     if (enable && !this._autoUpdate) {
       this.on('resize.Helpers:autoUpdate', () => this.update())
       this._autoUpdate = true
@@ -644,7 +660,14 @@ const Helpers = {
   // *******************************************************************************
   // * Events
 
-  on(event = requiredParam('event'), callback = requiredParam('callback')) {
+  on(event, callback) {
+    if (typeof event === 'undefined') {
+      requiredParam('event');
+    }
+    if (typeof callback === 'undefined') {
+      requiredParam('callback');
+    }
+
     const [_event] = event.split('.')
     let [, ...namespace] = event.split('.')
     // let [_event, ...namespace] = event.split('.')
@@ -653,7 +676,10 @@ const Helpers = {
     this._listeners.push({ event: _event, namespace, callback })
   },
 
-  off(event = requiredParam('event')) {
+  off(event) {
+    if (typeof event === 'undefined') {
+      requiredParam('event');
+    }
     const [_event] = event.split('.')
     let [, ...namespace] = event.split('.')
     namespace = namespace.join('.') || null
@@ -805,17 +831,15 @@ const Helpers = {
 
         targetEl.forEach(tel => {
           tel.classList.toggle('show')
-          if (
-            typeof overlay !== 'undefined' &&
-            overlay !== null &&
-            overlay !== false &&
-            typeof appOverlay !== 'undefined'
-          ) {
+
+          // Simplificar la validación lógica
+          if (overlay && appOverlay.length > 0) {
             if (tel.classList.contains('show')) {
               appOverlay[0].classList.add('show')
             } else {
               appOverlay[0].classList.remove('show')
             }
+
             appOverlay[0].addEventListener('click', e => {
               e.currentTarget.classList.remove('show')
               tel.classList.remove('show')

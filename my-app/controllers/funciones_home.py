@@ -292,7 +292,7 @@ def procesar_actualizacion_form(data):
 
                 if data.files['foto_empleado']:
                     file = data.files['foto_empleado']
-                    fotoForm = procesar_imagen_perfil(file)
+                    foto_form = procesar_imagen_perfil(file)
 
                     query_sql = """
                         UPDATE tbl_empleados
@@ -309,7 +309,7 @@ def procesar_actualizacion_form(data):
                     """
                     values = (nombre_empleado, apellido_empleado, sexo_empleado,
                               telefono_empleado, email_empleado, profesion_empleado,
-                              salario_empleado, fotoForm, id_empleado)
+                              salario_empleado, foto_form, id_empleado)
                 else:
                     query_sql = """
                         UPDATE tbl_empleados

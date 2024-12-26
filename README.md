@@ -7,31 +7,21 @@
 - Leonardo Gustavo Gaona Briceño
 - Michael Jarnie Ticona Larico
 
-# Compilación, Gestión de Dependencias y Empaquetado de la Aplicación
+# Pipeline de Integración Continua
 
-Este documento detalla cómo compilar, gestionar dependencias y empaquetar la aplicación `CRUD-PYTHON` utilizando **PyBuilder**.
+## 1. **Construcción Automática**
+   - **Herramientas**: PyBuilder
+   - **Descripción**: En esta etapa, se compila y construye el proyecto automáticamente.
 
-## Pasos para Ejecutar PyBuilder
+### Instalar Dependencias
 
-### 1. Instalar Dependencias
-
-Desde la raíz del proyecto, ejecuta:
+Desde la raíz del proyecto, ejecuta y esto instalará todas las dependencias definidas en el archivo `build.py`.
 
 ```bash
 pyb install_dependencies
 ```
 
-Esto instalará todas las dependencias definidas en el archivo `build.py`.
-
-### 2. Ejecutar Pruebas Unitarias
-
-Para validar que las pruebas unitarias están funcionando correctamente:
-
-```bash
-pyb run_unit_tests
-```
-
-### 3. Compilar y Empaquetar el Proyecto
+### Compilar y Empaquetar el Proyecto
 
 Para generar los artefactos del proyecto:
 
@@ -69,11 +59,6 @@ Esto instalará la aplicación en tu entorno Python.
 
 ---
 
-# Pipeline de Integración Continua
-
-## 1. **Construcción Automática**
-   - **Herramientas**: PyBuilder
-   - **Descripción**: En esta etapa, se compila y construye el proyecto automáticamente.
 ## 2. **Análisis Estático de Código Fuente**
    - **Herramientas**: SonarQube
    - **Descripción**: El análisis estático del código fuente permite detectar vulnerabilidades, bugs, code smells y otros problemas.
@@ -81,6 +66,11 @@ Esto instalará la aplicación en tu entorno Python.
 ## 3. **Pruebas Unitarias**
    - **Herramientas**: xUnit
    - **Descripción**: Las pruebas unitarias validan que el código funciona correctamente a nivel de funciones o métodos individuales.
+### Ejecutar Pruebas Unitarias
+Para validar que las pruebas unitarias están funcionando correctamente:
+```bash
+pyb run_unit_tests
+```
 
 ## 4. **Pruebas Funcionales**
    - **Herramientas**: Selenium
@@ -106,3 +96,5 @@ Esto instalará la aplicación en tu entorno Python.
        - La clave API utilizada en el comando debe coincidir con la que se usa en el pipeline en este caso (`h7p3lfqsmh62qvb0gmc6t6ksmb`).
 
 ### Ejemplo del pipeline de OWASP ZAP:
+![imagen](https://github.com/user-attachments/assets/b604434b-b4a4-4020-a901-b7e60191a9ce)
+![imagen](https://github.com/user-attachments/assets/e78e401c-cf77-4d59-8e81-977eba1622e0)

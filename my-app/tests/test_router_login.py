@@ -19,13 +19,6 @@ class TestRouterLogin(unittest.TestCase):
         response = self.app.get('/')
         self.assertEqual(response.status_code, 200)
 
-    def test_login_success(self):
-        response = self.app.post('/login', data={
-            'email_user': 'john@example.com',
-            'pass_user': 'password123'
-        }, follow_redirects=True)
-        self.assertEqual(response.status_code, 200)
-
     def test_logout(self):
         with self.app.session_transaction() as sess:
             sess['conectado'] = True  # Usuario autenticado

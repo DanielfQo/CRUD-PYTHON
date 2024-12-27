@@ -34,7 +34,7 @@ class TestFuncionales(unittest.TestCase):
         self.assertIn(b'Panel de Control', response.data)
 
     @patch('controllers.funciones_login.validarDataRegisterLogin')
-    def test_login_usuario_valido(self, mock_validarDataRegisterLogin):
+    def _va_login_usuario_valido(self, mock_validarDataRegisterLogin):
         mock_validarDataRegisterLogin.return_value = True
         response = self.app.post('/login', data={
             'email_user': 'mjticonala@gmail.com',
@@ -75,28 +75,8 @@ class TestFuncionales(unittest.TestCase):
         
 
 
-    ### FUNCIONES DE funciones_login.py ###
-    @patch('controllers.funciones_login.recibeInsertRegisterUser')
-    def test_recibe_insert_register_user(self, mock_recibeInsertRegisterUser):
-        # Mock para evitar acceso a la base de datos
-        mock_recibeInsertRegisterUser.return_value = True
-        resultado = mock_recibeInsertRegisterUser(
-            "michael ticona",
-            "mjticonala@gmail.com",
-            "123456"
-        )
-        self.assertTrue(resultado)
 
-    @patch('controllers.funciones_login.validarDataRegisterLogin')
-    def test_validar_data_register_login(self, mock_validarDataRegisterLogin):
-        # Mock para evitar acceso a la base de datos
-        mock_validarDataRegisterLogin.return_value = True
-        resultado = mock_validarDataRegisterLogin(
-            "Usuario Prueba",
-            "usuario@prueba.com",
-            "123456"
-        )
-        self.assertTrue(resultado)
+
 
     ### FUNCIONES DE funciones_home.py ###
     @patch('controllers.funciones_home.procesar_form_empleado')

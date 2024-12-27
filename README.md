@@ -1,11 +1,74 @@
-## CRUD con Python 🐍 MySQL 💾 y un Dashboard Asombroso 🚀
+# CRUD con Python 🐍 MySQL 💾 y un Dashboard Asombroso 🚀
 
-## NOMBRE EQUIPO
+## NOMBRE EQUIPO: BAJANDO KILITOS
 
 - Daniel Frank Quiñones Olgado
 - Kevin Andres Rodriguez Lima
 - Leonardo Gustavo Gaona Briceño
 - Michael Jarnie Ticona Larico
+
+## Objetivo
+
+El objetivo de este proyecto es desarrollar una aplicación web que permita la gestión de empleados y usuarios. La plataforma incluye un sistema de **autenticación** (registro e inicio de sesión), un **CRUD** (Crear, Leer, Actualizar, Eliminar) para empleados y usuarios, un **perfil de usuario** personalizable, y un **dashboard** interactivo para visualizar métricas clave.
+
+## Arquitectura de Software
+
+La arquitectura de la aplicación se basa en un diseño **MVC (Modelo-Vista-Controlador)**. 
+
+## Funcionalidades Principales
+
+1. **Sistema de Autenticación**:
+   - Registro de nuevos usuarios.
+   - Inicio de sesión con validación de credenciales.
+![image](https://github.com/user-attachments/assets/280a1ae2-5542-4e82-90be-923809955d11)
+
+2. **Gestión de Usuarios y Empleados**:
+   - Crear, Leer, Actualizar y Eliminar registros.
+   - Asignación de roles (usuario estándar, administrador).
+![image](https://github.com/user-attachments/assets/4a471938-5c47-4e4b-b524-0a4baab21089)
+
+3. **Dashboard Interactivo**:
+   - Visualización de componentes clave como listar usuario, empleado, perfil, reportes y salir.
+![image](https://github.com/user-attachments/assets/3a0b1946-494c-4bf7-9916-7cfeab53395d)
+
+4. **Perfil de Usuario**:
+   - Edición de información personal.
+   - Cambio de contraseña.
+![image](https://github.com/user-attachments/assets/4b117bfc-7333-4299-89ee-2d146f8394c5)
+
+---
+
+## Tecnologías
+
+### Lenguaje de Programación
+- **Python**: Para la lógica del backend.
+
+### Frameworks
+- **Flask**: Para la construcción del backend y la API RESTful.
+
+### Bibliotecas
+- **SQLAlchemy**: Para la gestión de la base de datos.
+- **Jinja2**: Para las plantillas HTML.
+- **Chart.js**: Para los gráficos interactivos en el dashboard.
+
+### Herramientas de Construcción y Pruebas
+- **Postman**: Para probar la API RESTful.
+- **Pytest**: Para pruebas unitarias y funcionales.
+- **Flake8**: Para analizar la calidad del código.
+
+---
+
+## Requisitos para Ejecutar el Proyecto
+
+1. **Entorno de desarrollo**:
+   - Python 3.10 o superior.
+   - 
+2. **Dependencias**:
+   Ejecutar el siguiente comando para instalar las dependencias necesarias:
+   pip install -r requirements.txt
+3. **Lanzar el proyecto**:
+   Dentro de my-app lanzar con pythonn run.py
+
 
 # Pipeline de Integración Continua
 

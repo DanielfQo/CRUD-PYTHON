@@ -80,7 +80,7 @@ def sql_lista_empleadosBD():
     try:
         with connectionBD() as conexion_MySQLdb:
             with conexion_MySQLdb.cursor(dictionary=True) as cursor:
-                query_sql = (f"""
+                query_sql = """
                     SELECT 
                         e.id_empleado,
                         e.nombre_empleado, 
@@ -93,13 +93,12 @@ def sql_lista_empleadosBD():
                         END AS sexo_empleado
                     FROM tbl_empleados AS e
                     ORDER BY e.id_empleado DESC
-                    """)
-                cursor.execute(query_sql,)
+                """
+                cursor.execute(query_sql)
                 empleado_bd = cursor.fetchall()
         return empleado_bd
     except Exception as e:
-        print(
-            f"Errro en la función sql_lista_empleadosBD: {e}")
+        print(f"Error en la función sql_lista_empleadosBD: {e}")
         return None
 
 

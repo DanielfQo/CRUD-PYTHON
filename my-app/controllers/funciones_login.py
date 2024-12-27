@@ -61,15 +61,19 @@ def validarDataRegisterLogin(name_surname, email_user, pass_user):
 
 def info_perfil_session():
     try:
+        user_id = session.get('id')  # Verifica que la clave exista en la sesión
+        if not user_id:
+            raise KeyError("El usuario no está autenticado.")
         with connectionBD() as conexion_MySQLdb:
             with conexion_MySQLdb.cursor(dictionary=True) as cursor:
                 query_sql = "SELECT name_surname, email_user FROM users WHERE id = %s"
-                cursor.execute(query_sql, (session['id'],))
+                cursor.execute(query_sql, (user_id,))
                 info_perfil = cursor.fetchall()
         return info_perfil
     except Exception as e:
         print(f"Error en info_perfil_session : {e}")
         return []
+
 
 
 def procesar_update_perfil(data_form):
@@ -143,8 +147,8 @@ def updatePefilSinPass(id_user, name_surname):
 
 def dataLoginSesion():
     infor_login = {
-        "id": session['id'],
-        "name_surname": session['name_surname'],
-        "email_user": session['email_user']
+        "id": session.get('id'),
+        "name_surname": session.get('name_surname'),
+        "email_user": session.get('email_user')
     }
     return infor_login

@@ -100,37 +100,52 @@ def loginCliente():
         return redirect(url_for('inicio'))
     else:
         if request.method == 'POST' and 'email_user' in request.form and 'pass_user' in request.form:
-
             email_user = str(request.form['email_user'])
             pass_user = str(request.form['pass_user'])
 
             # Comprobando si existe una cuenta
             conexion_mysqldb = connectionBD()
-            cursor = conexion_mysqldb.cursor(dictionary=True)
-            cursor.execute(
-                "SELECT * FROM users WHERE email_user = %s", [email_user])
-            account = cursor.fetchone()
 
-            if account:
-                if check_password_hash(account['pass_user'], pass_user):
-                    # Crear datos de sesión, para poder acceder a estos datos en otras rutas
-                    session['conectado'] = True
-                    session['id'] = account['id']
-                    session['name_surname'] = account['name_surname']
-                    session['email_user'] = account['email_user']
-
-                    flash('la sesión fue correcta.', 'success')
-                    return redirect(url_for('inicio'))
-                else:
-                    # La cuenta no existe o el nombre de usuario/contraseña es incorrecto
-                    flash('datos incorrectos por favor revise.', 'error')
-                    return render_template(f'{PATH_URL_LOGIN}/base_login.html')
-            else:
-                flash('el usuario no existe, por favor verifique.', 'error')
+            if conexion_mysqldb is None:
+                # Manejar el caso de error de conexión
+                flash('Error al conectar con la base de datos. Inténtelo de nuevo más tarde.', 'error')
                 return render_template(f'{PATH_URL_LOGIN}/base_login.html')
+
+            try:
+                cursor = conexion_mysqldb.cursor(dictionary=True)
+                cursor.execute("SELECT * FROM users WHERE email_user = %s", [email_user])
+                account = cursor.fetchone()
+
+                if account:
+                    if check_password_hash(account['pass_user'], pass_user):
+                        # Crear datos de sesión, para poder acceder a estos datos en otras rutas
+                        session['conectado'] = True
+                        session['id'] = account['id']
+                        session['name_surname'] = account['name_surname']
+                        session['email_user'] = account['email_user']
+
+                        flash('La sesión fue correcta.', 'success')
+                        return redirect(url_for('inicio'))
+                    else:
+                        # La cuenta no existe o el nombre de usuario/contraseña es incorrecto
+                        flash('Datos incorrectos, por favor revise.', 'error')
+                        return render_template(f'{PATH_URL_LOGIN}/base_login.html')
+                else:
+                    flash('El usuario no existe, por favor verifique.', 'error')
+                    return render_template(f'{PATH_URL_LOGIN}/base_login.html')
+            except Exception as e:
+                # Capturar cualquier error inesperado al interactuar con la base de datos
+                print(f"Error en loginCliente: {e}")
+                flash('Se produjo un error al procesar la solicitud. Inténtelo de nuevo.', 'error')
+                return render_template(f'{PATH_URL_LOGIN}/base_login.html')
+            finally:
+                # Asegurarse de cerrar la conexión si fue abierta correctamente
+                if conexion_mysqldb.is_connected():
+                    conexion_mysqldb.close()
         else:
-            flash('primero debes iniciar sesión.', 'error')
+            flash('Primero debes iniciar sesión.', 'error')
             return render_template(f'{PATH_URL_LOGIN}/base_login.html')
+
 
 
 @app.route('/closed-session',  methods=['GET'])

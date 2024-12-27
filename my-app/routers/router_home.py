@@ -29,6 +29,9 @@ def formEmpleado():
             else:
                 flash('El empleado NO fue registrado.', 'error')
                 return render_template(f'{PATH_URL}/form_empleado.html')
+        else:
+            flash('No se ha subido ninguna foto.', 'error')
+            return render_template(f'{PATH_URL}/form_empleado.html')
     else:
         flash('primero debes iniciar sesión.', 'error')
         return redirect(url_for('inicio'))

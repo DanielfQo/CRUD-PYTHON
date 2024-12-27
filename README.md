@@ -52,17 +52,17 @@ La arquitectura de la aplicación se basa en un diseño **MVC (Modelo-Vista-Cont
 - **Chart.js**: Para los gráficos interactivos en el dashboard.
 
 ### Herramientas de Construcción y Pruebas
-- **Postman**: Para probar la API RESTful.
-- **Pytest**: Para pruebas unitarias y funcionales.
-- **Flake8**: Para analizar la calidad del código.
-
+- **PyBuilder**
+- **SonarQube**
+- **xUnit**
+- **JMeter**
+- - **OWASP ZAP**
 ---
 
 ## Requisitos para Ejecutar el Proyecto
 
 1. **Entorno de desarrollo**:
    - Python 3.10 o superior.
-   - 
 2. **Dependencias**:
    Ejecutar el siguiente comando para instalar las dependencias necesarias:
    pip install -r requirements.txt

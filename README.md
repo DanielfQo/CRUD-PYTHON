@@ -71,6 +71,7 @@ La arquitectura de la aplicación se basa en un diseño **MVC (Modelo-Vista-Cont
 
 
 # Pipeline de Integración Continua
+![image](https://github.com/user-attachments/assets/4d19cb2a-23b9-461e-a911-bfb1cc74f924)
 
 # 1. **Construcción Automática**
    - **Herramientas**: PyBuilder

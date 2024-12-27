@@ -259,6 +259,48 @@ Para validar que las pruebas unitarias están funcionando correctamente:
 ```bash
 pyb run_unit_tests
 ```
+![image](https://github.com/user-attachments/assets/e856f7e1-724c-4cb5-bbb4-e3dd68a7302d)
+
+```bash
+pipeline {
+      stage("Pruebas_Unitarias/Funcionales") {
+            steps {
+                script {
+                    sh '''
+                    # Exportar la ruta del proyecto
+                    export PYTHONPATH=$(pwd)/my-app:$PYTHONPATH
+                    
+                    # Activar el entorno virtual (si lo tienes)
+                    . venv/bin/activate
+        
+                    # Instalar coverage si no está instalado
+                    pip install selenium coverage
+                    
+                    # Ejecutar las pruebas unitarias con cobertura
+                    coverage run -m unittest discover -s my-app/tests
+                    
+                    # Generar reporte en consola
+                    coverage report -m
+                    
+                    # Generar reporte en formato HTML
+                    coverage html
+                    '''
+                }
+                echo "Pruebas unitarias ejecutadas correctamente."
+                script {
+                    sh '''
+                    # Servir el reporte en un servidor local
+                    cd htmlcov
+                    python3 -m http.server 8000 &
+                    sleep 5  # Esperar a que el servidor inicie
+
+                    echo "Accede al reporte de cobertura en: http://localhost:8000/index.html"
+                    '''
+                }
+            }
+        }
+}
+```
 
 # 4. **Pruebas Funcionales**
    - **Herramientas**: 

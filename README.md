@@ -334,6 +334,7 @@ pipeline {
 ### **Integración en Jenkins**
    - **Pipeline**: Automáticamente clona el repositorio, instala dependencias, arranca la aplicación y ejecuta el plan de prueba de performance. Adicional a esto, los resultados de JMeter se almacenan en una carpeta `Performance/results` para tener un análisis detallado.
 
+![image](https://github.com/user-attachments/assets/9bff1846-0107-4c55-9f51-55a980ef0c42)
 
 ```bash
 pipeline {

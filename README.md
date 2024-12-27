@@ -78,7 +78,28 @@ pyb run_unit_tests
 
 ## 5. **Pruebas de Performance**
    - **Herramientas**: JMeter
-   - **Descripción**: Se realizan pruebas de rendimiento para asegurarse de que la aplicación puede manejar la carga esperada y medir el rendimiento bajo condiciones de uso.
+   - **Descripción**:
+     - Las pruebas de rendimiento permiten evaluar la capacidad de la aplicación para manejar múltiples usuarios y solicitudes simultáneamente bajo diferentes condiciones de carga.
+     - Se utiliza **JMeter**, una herramienta ampliamente conocida para realizar pruebas de rendimiento mediante planes de prueba predefinidos.
+     - En este caso, se diseñó un plan de prueba (`plan.jmx`) con varios grupos de hilos (*Thread Groups*) que simulan distintos escenarios, como inicios de sesión, registros y consultas.
+     - El pipeline automatiza la ejecución de estas pruebas, recopilando resultados en formatos compatibles para análisis posterior.
+
+### **Creación del `plan.jmx`**
+   - El plan de prueba contiene las siguientes características:
+     1. **Thread Groups**: Configurados para simular 50 usuarios concurrentes con un tiempo de rampa de 2 segundos.
+     2. **Solicitudes HTTP**: Pruebas específicas para los endpoints `/login`, `/form-registrar-empleado` y `/lista-de-empleados`, enviando datos relevantes en formato JSON o parámetros URL.
+     3. **Assertions**: Se añaden validaciones para asegurar que las respuestas contienen datos esperados, como la aparición de "Juan Perez" en el caso de la consulta de empleados.
+     4. **Resultados**: Configurados para registrar métricas como tiempo de respuesta, latencia, código de estado, éxito o falla de cada solicitud.
+
+   - El archivo XML (`plan.jmx`) se crea y configura directamente desde la interfaz gráfica de **JMeter**:
+     1. Configuración de los *Thread Groups*.
+     2. Creación de muestras HTTP (`HTTP Samplers`) para cada endpoint.
+     3. Configuración de validaciones (`Assertions`) y recopiladores de resultados (`Result Collectors`).
+     4. Exportación del plan en formato `.jmx`.
+        
+### **Integración en Jenkins**
+   - **Pipeline**: Automáticamente clona el repositorio, instala dependencias, arranca la aplicación y ejecuta el plan de prueba de performance. Adicional a esto, los resultados de JMeter se almacenan en una carpeta `Performance/results` para tener un análisis detallado.
+
 
 ## 6. **Pruebas de Seguridad: OWASP ZAP**
    - **Herramientas**: OWASP ZAP
